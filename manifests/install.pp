@@ -64,6 +64,7 @@ class daemontools::install (
 
     '/command/svscanboot &':
       unless  => 'pgrep svscan',
+      path => '/bin:/usr/bin',
       require => Exec['install daemontools'],
   }
 }
