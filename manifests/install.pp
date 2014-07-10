@@ -41,9 +41,6 @@ class daemontools::install (
       ensure => link,
       target => "/usr/local/bin/svstat",
       require => Exec['get daemontools'];
-
-    "/etc/init/svscanboot.conf":
-      source  => "puppet:///modules/${module_name}/etc/init/svscanboot.conf";
   }
 
   exec {
