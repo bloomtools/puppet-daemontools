@@ -1,8 +1,8 @@
 # ensure can be running or stopped
 define daemontools::setup(
   $run,
-  $logrun,
   $user,
+  $logrun = '',
   $loguser = $user,
   $group = 'daemon',
   $basedir = "/etc"
@@ -55,20 +55,23 @@ define daemontools::setup(
       group   => $group,
       mode    => 0755,
       notify  => Exec["restart ${name}"];
+  }
 
-    "${basedir}/${name}/log":
-      ensure  => directory,
-      owner   => $loguser,
-      group   => $group,
-      mode    => 2755,
-      notify  => Exec["restart ${name} log"];
-    
-    "${basedir}/${name}/log/run":
-      content => $logrun,
-      owner   => $loguser,
-      group   => $group,
-      mode    => 0755,
-      notify  => Exec["restart ${name} log"];
+  if $logrun != '' {
+    file {
+      "${basedir}/${name}/log":
+        ensure  => directory,
+        owner   => $loguser,
+        group   => $group,
+        mode    => 2755,
+        notify  => Exec["restart ${name} log"];
 
+      "${basedir}/${name}/log/run":
+        content => $logrun,
+        owner   => $loguser,
+        group   => $group,
+        mode    => 0755,
+        notify  => Exec["restart ${name} log"];
+    }
   }
 }
